@@ -148,13 +148,21 @@ export const useSpecStore = create<SpecState>()(
       
       onConnect: (connection) => {
         // Check if connection is valid
-        if (!connection.source || !connection.target) return;
+        if (!connection.source || !connection.target) {
+          console.log('Invalid connection - missing source or target');
+          return;
+        }
         
         // Find source and target nodes
         const sourceNode = get().nodes.find(node => node.id === connection.source);
         const targetNode = get().nodes.find(node => node.id === connection.target);
         
-        if (!sourceNode || !targetNode) return;
+        if (!sourceNode || !targetNode) {
+          console.log('Invalid connection - source or target node not found');
+          return;
+        }
+        
+        console.log('Connection attempt between:', sourceNode.data.type, 'and', targetNode.data.type);
         
         // Check for valid connections based on node types
         let isValid = false;
@@ -178,6 +186,7 @@ export const useSpecStore = create<SpecState>()(
         }
         
         if (isValid) {
+          console.log('Creating valid edge');
           const newEdge: Edge = {
             id: uuidv4(),
             source: connection.source,
@@ -185,9 +194,12 @@ export const useSpecStore = create<SpecState>()(
             sourceHandle: connection.sourceHandle,
             targetHandle: connection.targetHandle,
             animated: true,
+            type: 'smoothstep',
           };
           
           set({ edges: [...get().edges, newEdge] });
+        } else {
+          console.log('Connection type not allowed');
         }
       },
       

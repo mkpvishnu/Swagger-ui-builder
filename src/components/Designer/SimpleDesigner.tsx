@@ -6,7 +6,11 @@ import ReactFlow, {
   NodeTypes,
   useReactFlow,
   Connection,
-  Edge
+  Edge,
+  NodeChange,
+  applyNodeChanges,
+  EdgeChange,
+  applyEdgeChanges
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import { useSpecStore, NodeData } from '../../store/specStore';
@@ -28,8 +32,24 @@ const nodeTypes: NodeTypes = {
 
 const SimpleDesigner: React.FC = () => {
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
-  const { nodes, edges, addNode, setSelectedNode, onConnect } = useSpecStore();
+  const { nodes, edges, addNode, setNodes, setEdges, setSelectedNode, onConnect } = useSpecStore();
   const reactFlowInstance = useReactFlow();
+  
+  // Handle node changes (position, selection)
+  const onNodesChange = useCallback(
+    (changes: NodeChange[]) => {
+      setNodes(applyNodeChanges(changes, nodes));
+    },
+    [nodes, setNodes]
+  );
+
+  // Handle edge changes
+  const onEdgesChange = useCallback(
+    (changes: EdgeChange[]) => {
+      setEdges(applyEdgeChanges(changes, edges));
+    },
+    [edges, setEdges]
+  );
   
   // Get default properties for a node type
   const getDefaultPropertiesForType = (type: string): Record<string, any> => {
@@ -150,6 +170,7 @@ const SimpleDesigner: React.FC = () => {
   // Handle connection between nodes
   const handleConnect = useCallback(
     (params: Connection) => {
+      console.log('Connection attempt:', params);
       onConnect(params);
     },
     [onConnect]
@@ -166,12 +187,16 @@ const SimpleDesigner: React.FC = () => {
       <ReactFlow
         nodes={nodes}
         edges={edges}
-        onNodesChange={() => {}}
+        onNodesChange={onNodesChange}
+        onEdgesChange={onEdgesChange}
         onNodeClick={onNodeClick}
         onConnect={handleConnect}
         onDrop={onDrop}
         onDragOver={onDragOver}
         nodeTypes={nodeTypes}
+        connectionLineStyle={{ stroke: '#999', strokeWidth: 2 }}
+        connectionLineType="smoothstep"
+        defaultEdgeOptions={{ type: 'smoothstep', animated: true }}
         fitView
       >
         <Controls />

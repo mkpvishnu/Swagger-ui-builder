@@ -8,7 +8,9 @@ const SimplePathNode: React.FC<NodeProps<NodeData>> = ({ data, selected }) => {
       <Handle 
         type="target" 
         position={Position.Top} 
-        className="w-2 h-2 bg-blue-500" 
+        id="target-top"
+        className="w-3 h-3 bg-blue-500 border-2 border-white" 
+        isConnectable={true}
       />
       
       <div className="w-48">
@@ -26,7 +28,9 @@ const SimplePathNode: React.FC<NodeProps<NodeData>> = ({ data, selected }) => {
       <Handle 
         type="source" 
         position={Position.Bottom} 
-        className="w-2 h-2 bg-blue-500" 
+        id="source-bottom"
+        className="w-3 h-3 bg-blue-500 border-2 border-white" 
+        isConnectable={true}
       />
     </div>
   );

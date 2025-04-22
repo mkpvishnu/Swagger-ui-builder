@@ -4,39 +4,29 @@ import { NodeData } from '../../../store/specStore';
 
 const SimpleParameterNode: React.FC<NodeProps<NodeData>> = ({ data, selected }) => {
   return (
-    <div className={`p-3 rounded-md shadow-md ${selected ? 'ring-2 ring-yellow-500' : ''} bg-yellow-50 dark:bg-yellow-900 border border-yellow-200 dark:border-yellow-800`}>
+    <div className={`p-3 rounded-md shadow-md ${selected ? 'ring-2 ring-orange-500' : ''} bg-orange-50 dark:bg-orange-900 border border-orange-200 dark:border-orange-800`}>
       <Handle 
         type="target" 
         position={Position.Top} 
-        className="w-2 h-2 bg-yellow-500" 
+        id="target-top"
+        className="w-3 h-3 bg-orange-500 border-2 border-white" 
+        isConnectable={true}
       />
       
       <div className="w-48">
-        <div className="font-medium text-yellow-800 dark:text-yellow-300">
-          {data.properties?.name || data.label}
-        </div>
-        
-        <div className="flex items-center space-x-2 mt-1">
-          <span className="text-xs bg-yellow-200 dark:bg-yellow-700 px-1 py-0.5 rounded text-yellow-600 dark:text-yellow-400">
+        <div className="flex items-center space-x-1">
+          <div className={`text-xs px-1.5 py-0.5 rounded ${data.properties?.required ? 'bg-red-200 dark:bg-red-800 text-red-800 dark:text-red-200' : 'bg-orange-200 dark:bg-orange-700 text-orange-800 dark:text-orange-200'}`}>
             {data.properties?.in || 'query'}
-          </span>
+          </div>
           
-          {data.properties?.required && (
-            <span className="text-xs bg-red-100 dark:bg-red-900 px-1 py-0.5 rounded text-red-600 dark:text-red-400">
-              required
-            </span>
-          )}
-          
-          {data.properties?.schema?.type && (
-            <span className="text-xs text-yellow-600 dark:text-yellow-400">
-              {data.properties.schema.type}
-            </span>
-          )}
+          <div className="font-mono text-orange-800 dark:text-orange-300 text-sm font-medium truncate">
+            {data.properties?.name || data.label}
+          </div>
         </div>
         
-        {data.properties?.description && (
-          <div className="text-xs text-yellow-600 dark:text-yellow-400 mt-1 truncate">
-            {data.properties.description}
+        {data.properties?.schema?.type && (
+          <div className="text-xs text-orange-600 dark:text-orange-400 mt-1">
+            Type: {data.properties.schema.type}
           </div>
         )}
       </div>
@@ -44,7 +34,9 @@ const SimpleParameterNode: React.FC<NodeProps<NodeData>> = ({ data, selected }) 
       <Handle 
         type="source" 
         position={Position.Bottom} 
-        className="w-2 h-2 bg-yellow-500" 
+        id="source-bottom"
+        className="w-3 h-3 bg-orange-500 border-2 border-white" 
+        isConnectable={true}
       />
     </div>
   );
